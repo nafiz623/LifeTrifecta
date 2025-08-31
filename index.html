@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Life Trifecta</title>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Vue.js CDN (Optional) -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- Manifest for PWA (add later) -->
+</head>
+<body class="h-full bg-gray-50" id="app">
+  <!-- Top Navigation Bar -->
+  <nav class="w-full bg-white shadow-md px-4 py-2 flex justify-between items-center">
+    <span class="font-bold text-xl text-indigo-600">Life Trifecta</span>
+    <div class="space-x-4 hidden md:block">
+      <a href="#" class="text-gray-700 hover:text-indigo-600">Dashboard</a>
+      <a href="#" class="text-gray-700 hover:text-indigo-600">Notifications</a>
+      <a href="#" class="text-gray-700 hover:text-indigo-600">Settings</a>
+    </div>
+    <!-- Mobile Menu Icon (optional) -->
+  </nav>
 
+  <!-- Main Content Area -->
+  <main class="flex-1 p-4 pb-20 max-w-4xl mx-auto">
+    <!-- Vue or vanilla JS will swap content here -->
+    <section id="dashboard">
+      <!-- Example: Digital Clock -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Digital Clock</h2>
+        <div id="digitalClock" class="text-3xl font-mono"></div>
+      </div>
+      <!-- Stopwatch Feature -->
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold mb-2">Stopwatch</h2>
+        <div id="stopwatch" class="text-2xl font-mono">00:00:00</div>
+        <div class="space-x-2 mt-2">
+          <button onclick="startStopwatch()" class="px-2 py-1 bg-indigo-500 text-white rounded">Start</button>
+          <button onclick="pauseStopwatch()" class="px-2 py-1 bg-yellow-500 text-white rounded">Pause</button>
+          <button onclick="resetStopwatch()" class="px-2 py-1 bg-red-500 text-white rounded">Reset</button>
+        </div>
+      </div>
+      <!-- Add each feature module here -->
+    </section>
+    <section id="notifications" class="hidden">
+      <!-- Notifications Tab Content -->
+    </section>
+    <section id="settings" class="hidden">
+      <!-- Settings Tab Content -->
+    </section>
+  </main>
+
+  <!-- Bottom Navigation (Mobile First) -->
+  <nav class="fixed bottom-0 left-0 w-full bg-white border-t shadow md:hidden flex justify-around py-2 z-50">
+    <button onclick="showTab('dashboard')" class="flex flex-col items-center">
+      <span>🏠</span>
+      <span class="text-xs">Dashboard</span>
+    </button>
+    <button onclick="showTab('notifications')" class="flex flex-col items-center">
+      <span>🔔</span>
+      <span class="text-xs">Notifications</span>
+    </button>
+    <button onclick="showTab('settings')" class="flex flex-col items-center">
+      <span>⚙️</span>
+      <span class="text-xs">Settings</span>
+    </button>
+  </nav>
+
+  <!-- Main JS File -->
+  <script>
+    // Tab switch logic
+    function showTab(tab) {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('notifications').classList.add('hidden');
+      document.getElementById('settings').classList.add('hidden');
+      document.getElementById(tab).classList.remove('hidden');
+    }
+    // Default tab
+    showTab('dashboard');
+
+    // Digital Clock Example
+    function updateClock() {
+      const now = new Date();
+      let h = now.getHours();
+      const m = now.getMinutes().toString().padStart(2,'0');
+      const s = now.getSeconds().toString().padStart(2,'0');
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      document.getElementById('digitalClock').textContent = `${h}:${m}:${s} ${ampm}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Stopwatch Example
+    let stopwatchInterval, stopwatchTime = 0, stopwatchRunning = false;
+    function updateStopwatch() {
+      let t = stopwatchTime;
+      let h = Math.floor(t/3600).toString().padStart(2,'0');
+      let m = Math.floor((t%3600)/60).toString().padStart(2,'0');
+      let s = (t%60).toString().padStart(2,'0');
+      document.getElementById('stopwatch').textContent = `${h}:${m}:${s}`;
+    }
+    function startStopwatch(){
+      if(stopwatchRunning) return;
+      stopwatchRunning = true;
+      stopwatchInterval = setInterval(()=>{
+        stopwatchTime++; updateStopwatch();
+      },1000);
+    }
+    function pauseStopwatch(){
+      stopwatchRunning = false; clearInterval(stopwatchInterval);
+    }
+    function resetStopwatch(){
+      stopwatchTime=0; updateStopwatch();
+      pauseStopwatch();
+    }
+    updateStopwatch();
+  </script>
+</body>
+</html>
